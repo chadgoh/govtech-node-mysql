@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   const { teacher, student } = sequelize.models;
-  console.log(sequelize.models);
+
   const Student_Teacher = sequelize.define(
     "student_teacher",
     {
@@ -13,14 +13,12 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         references: {
           model: teacher,
-          key: teacher.id,
         },
       },
       studentEmail: {
         type: Sequelize.STRING,
         references: {
           model: student,
-          key: student.id,
         },
       },
     },

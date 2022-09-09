@@ -2,6 +2,7 @@ const database = require("../models");
 const Teacher = database.teachers;
 const Student = database.students;
 const Student_Teacher = database.student_teacher;
+const { Op } = require("sequelize");
 
 exports.createTeacher = (req, res) => {
   if (!req.body.email || !req.body.email.includes("@")) {
@@ -122,18 +123,43 @@ async function registerStudent(req, res) {
   });
 
   if (foundTeacher == null) {
-    res.status(404).send("Sorry, we cannot find a teacher with that email.");
+    res.status(400).send("Sorry, we cannot find a teacher with that email.");
     return null;
   }
 
-  studentEmails.forEach(async (email) => {
-    await Student.findOrCreate({ where: { email: email } });
+  studentEmails.forEach((email) => {
+    Student.findOrCreate({ where: { email: email } });
   });
+
+  console.log("moving on... ");
   await foundTeacher.addStudents(studentEmails);
 
   res
-    .status(200)
+    .status(204)
     .send(`Successfully registered ${studentEmails.length} students`);
 }
 
+async function commonStudents(req, res) {
+  const teachers = req.query.teacher;
+
+  // loop through teachers
+  const students = await Student_Teacher.findAll({
+    attributes: ["studentEmail"],
+    where: {
+      teacherEmail: {
+        [Op.or]: teachers,
+      },
+    },
+    raw: true,
+    group: "studentEmail",
+  });
+
+  res
+    .status(200)
+    .json({ students: students.map((student) => student.studentEmail) });
+  // get students under those teachers
+  return null;
+  // remove duplicates
+}
 module.exports.registerStudent = registerStudent;
+module.exports.commonStudents = commonStudents;

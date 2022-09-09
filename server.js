@@ -24,7 +24,7 @@ app.post("/testpost", (req, res) => {
 });
 
 database.sequelize
-  .sync({ force: true })
+  .sync({ force: false })
   .then(() => {
     console.log("Synced DB");
   })

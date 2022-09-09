@@ -9,7 +9,7 @@ module.exports = (app) => {
   router.put("/teachers/updateTeacher", teacher.updateTeacher);
 
   router.post("/register", teacher.registerStudent); // return 204 on success
-  router.get("/commonstudents"); // 200 on success
+  router.get("/commonstudents", teacher.commonStudents); // 200 on success
   router.post("/suspend"); // 204 on success
   router.post("/retrievefornotifications"); //200 on success
 
