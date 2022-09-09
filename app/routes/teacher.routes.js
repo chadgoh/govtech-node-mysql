@@ -10,7 +10,8 @@ module.exports = (app) => {
 
   router.post("/register", teacher.registerStudent); // return 204 on success
   router.get("/commonstudents", teacher.commonStudents); // 200 on success
-  router.post("/suspend"); // 204 on success
+  router.post("/suspend", teacher.suspendStudent);
+  router.post("/unsuspend", teacher.unsuspendStudent); // 204 on success
   router.post("/retrievefornotifications"); //200 on success
 
   app.use("/api", router);

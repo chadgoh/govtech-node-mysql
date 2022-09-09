@@ -97,7 +97,7 @@ exports.delete = (req, res) => {
   Teacher.destroy({
     where: { id: id },
   })
-    .then((num) => {
+    .then((data) => {
       if (data[0] === 1) {
         res.status(200).send({
           message: "Teacher successfully deleted.",
@@ -128,21 +128,17 @@ exports.registerStudent = async (req, res) => {
   }
 
   studentEmails.forEach((email) => {
-    Student.findOrCreate({ where: { email: email } });
+    Student.findOrCreate({ where: { email: email }, raw: true });
   });
 
-  console.log("moving on... ");
   await foundTeacher.addStudents(studentEmails);
 
-  res
-    .status(204)
-    .send(`Successfully registered ${studentEmails.length} students`);
+  res.status(204).send();
 };
 
 exports.commonStudents = async (req, res) => {
   const teachers = req.query.teacher;
 
-  // loop through teachers
   const students = await Student_Teacher.findAll({
     attributes: ["studentEmail"],
     where: {
@@ -153,11 +149,63 @@ exports.commonStudents = async (req, res) => {
     raw: true,
     group: "studentEmail",
   });
-
   res
     .status(200)
     .json({ students: students.map((student) => student.studentEmail) });
-  // get students under those teachers
+};
+
+exports.suspendStudent = (req, res) => {
+  if (req.body == null || req.body.student == null) {
+    res
+      .status(400)
+      .send({ message: "Invalid Request. Make sure you specify a student." });
+  }
+
+  const studentEmail = req.body.student;
+
+  Student.update({ isSuspended: true }, { where: { email: studentEmail } })
+    .then((data) => {
+      if (data[0] == 1) {
+        console.log(data);
+        res.status(204).send();
+      } else {
+        res.status(500).send({
+          message: `Cannot suspend student with email: ${studentEmail}`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Internal Server Error when trying to suspend student.",
+      });
+    });
   return null;
-  // remove duplicates
+};
+
+exports.unsuspendStudent = (req, res) => {
+  if (req.body == null || req.body.student == null) {
+    res
+      .status(400)
+      .send({ message: "Invalid Request. Make sure you specify a student." });
+  }
+
+  const studentEmail = req.body.student;
+
+  Student.update({ isSuspended: false }, { where: { email: studentEmail } })
+    .then((data) => {
+      if (data[0] == 1) {
+        console.log(data);
+        res.status(204).send();
+      } else {
+        res.status(500).send({
+          message: `Cannot unsuspend student with email: ${studentEmail}`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Internal Server Error when trying to unsuspend student.",
+      });
+    });
+  return null;
 };
