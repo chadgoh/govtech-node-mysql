@@ -115,7 +115,7 @@ exports.delete = (req, res) => {
     });
 };
 
-async function registerStudent(req, res) {
+exports.registerStudent = async (req, res) => {
   const { teacher: teacherEmail, students: studentEmails } = req.body;
 
   const foundTeacher = await Teacher.findOne({
@@ -137,9 +137,9 @@ async function registerStudent(req, res) {
   res
     .status(204)
     .send(`Successfully registered ${studentEmails.length} students`);
-}
+};
 
-async function commonStudents(req, res) {
+exports.commonStudents = async (req, res) => {
   const teachers = req.query.teacher;
 
   // loop through teachers
@@ -160,6 +160,4 @@ async function commonStudents(req, res) {
   // get students under those teachers
   return null;
   // remove duplicates
-}
-module.exports.registerStudent = registerStudent;
-module.exports.commonStudents = commonStudents;
+};
