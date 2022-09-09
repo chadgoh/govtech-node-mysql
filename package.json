@@ -1,0 +1,20 @@
+{
+  "name": "dcube",
+  "version": "1.0.0",
+  "description": "dcube coding assessment ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "chad",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "eslint-plugin-node": "^11.1.0",
+    "express": "^4.18.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.21.4"
+  }
+}
