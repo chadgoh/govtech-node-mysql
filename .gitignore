@@ -2,6 +2,7 @@
 logs
 *.log
 npm-debug.log*
+.DS_Store
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -20,7 +21,7 @@ lib-cov
 build/Release
 
 # Dependency directories
-node_modules/
+/node_modules
 
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -51,5 +52,6 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
+/*.env
 
 
