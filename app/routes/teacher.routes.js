@@ -11,7 +11,7 @@ module.exports = (app) => {
   router.get("/commonstudents", teacher.commonStudents); // 200 on success
   router.post("/suspend", teacher.suspendStudent); // 204 on success
   router.post("/unsuspend", teacher.unsuspendStudent); // 204 on success
-  router.post("/retrievefornotifications"); //200 on success
+  router.post("/retrievefornotifications", teacher.retrieveForNotifications); //200 on success
 
   app.use("/api", router);
 };

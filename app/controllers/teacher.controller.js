@@ -3,6 +3,7 @@ const Teacher = database.teachers;
 const Student = database.students;
 const Student_Teacher = database.student_teacher;
 const { Op } = require("sequelize");
+const { sequelize } = require("../models");
 
 exports.createTeacher = (req, res) => {
   if (!req.body.email || !req.body.email.includes("@")) {
@@ -208,4 +209,43 @@ exports.unsuspendStudent = (req, res) => {
       });
     });
   return null;
+};
+
+exports.retrieveForNotifications = async (req, res) => {
+  if (req.body == null) {
+    res.send(404).send({ message: "Invalid Request." });
+  }
+
+  const teacherEmail = req.body.teacher;
+  const splitStudents = req.body.notification.split("@");
+  const notificationMessage = splitStudents.shift();
+  const taggedStudents = [];
+
+  for (let index = 0; index < splitStudents.length; index += 2) {
+    const element = splitStudents[index]
+      .concat("@" + splitStudents[index + 1])
+      .trim();
+    taggedStudents.push(element);
+  }
+  console.log(taggedStudents);
+
+  const result = await Student_Teacher.findAll({
+    attributes: [],
+    include: {
+      model: Student,
+      required: true,
+      where: { isSuspended: false },
+      attributes: ["email"],
+    },
+    where: {
+      [Op.or]: [
+        { teacherEmail: teacherEmail },
+        { studentEmail: taggedStudents },
+      ],
+    },
+    raw: true,
+  });
+  console.log(result);
+
+  res.status(204).send();
 };
