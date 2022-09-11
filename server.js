@@ -33,6 +33,7 @@ database.sequelize
   });
 
 require("./app/teacher/routes/teacher.routes.js")(app);
+require("./app/student/routes/student.routes.js")(app);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);

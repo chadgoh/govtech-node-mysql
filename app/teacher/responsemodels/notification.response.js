@@ -8,4 +8,6 @@ class NotificationResponse {
   }
 }
 
-module.exports = { NotificationResponse };
+module.exports = function (recipients) {
+  return new NotificationResponse(recipients);
+};

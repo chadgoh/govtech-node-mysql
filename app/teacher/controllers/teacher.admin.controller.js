@@ -1,50 +1,65 @@
-const database = require("../../database");
-const Teacher = database.teachers;
-const Student = database.students;
-const Student_Teacher = database.student_teacher;
-const { Op } = require("sequelize");
 const NotificationResponse = require("../responsemodels/notification.response.js");
+const CommonStudentResponse = require("../responsemodels/commonstudents.response.js");
+const teacherService = require("../repositories/teacher.repository.js");
+const studentService = require("../../student/repositories/student.repository.js");
 
-exports.registerStudent = async (req, res) => {
-  const { teacher: teacherEmail, students: studentEmails } = req.body;
-
-  const foundTeacher = await Teacher.findOne({
-    where: { email: teacherEmail },
-  });
-
-  if (foundTeacher == null) {
-    res.status(400).send("Sorry, we cannot find a teacher with that email.");
-    return null;
+exports.registerStudent = (req, res) => {
+  if (
+    req.body == null ||
+    req.body.teacher == null ||
+    req.body.students == null
+  ) {
+    res.status(400).send({ message: "Invalid Request, check request body;" });
   }
 
+  const { teacher: teacherEmail, students: studentEmails } = req.body;
+
   studentEmails.forEach((email) => {
-    Student.findOrCreate({ where: { email: email }, raw: true });
+    studentService.findOrCreateStudent(email);
   });
 
-  await foundTeacher.addStudents(studentEmails);
-
-  res.status(204).send();
+  teacherService
+    .findTeacherByEmail(teacherEmail)
+    .then((foundTeacher) => {
+      console.log("<<", foundTeacher);
+      if (!foundTeacher) {
+        res
+          .status(404)
+          .send(
+            `Sorry, we cannot find a teacher with the given email: ${teacherEmail}`
+          );
+      }
+      teacherService.registerStudentsToTeacher(foundTeacher, studentEmails);
+      res.status(204).send();
+    })
+    .catch((error) => {
+      res.status(500).send({
+        message:
+          error.message || "Internal Server Error when registering students.",
+      });
+    });
 };
 
 exports.commonStudents = async (req, res) => {
   const teachers = req.query.teacher;
 
-  const students = await Student_Teacher.findAll({
-    attributes: ["studentEmail"],
-    where: {
-      teacherEmail: {
-        [Op.or]: teachers,
-      },
-    },
-    raw: true,
-    group: "studentEmail",
-  });
-  res
-    .status(200)
-    .json({ students: students.map((student) => student.studentEmail) });
+  try {
+    const students = await teacherService.findAllCommonStudents(teachers);
+    console.log(students);
+    res
+      .status(200)
+      .send(
+        CommonStudentResponse(students.map((student) => student.studentEmail))
+      );
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message || "Internal Server Error when finding common students.",
+    });
+  }
 };
 
-exports.suspendStudent = (req, res) => {
+exports.suspendStudent = async (req, res) => {
   if (req.body == null || req.body.student == null) {
     res
       .status(400)
@@ -53,26 +68,24 @@ exports.suspendStudent = (req, res) => {
 
   const studentEmail = req.body.student;
 
-  Student.update({ isSuspended: true }, { where: { email: studentEmail } })
-    .then((data) => {
-      if (data[0] == 1) {
-        console.log(data);
-        res.status(204).send();
-      } else {
-        res.status(500).send({
-          message: `Cannot suspend student with email: ${studentEmail}`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Internal Server Error when trying to suspend student.",
+  try {
+    const result = await studentService.suspendStudent(studentEmail, true);
+    console.log(result);
+    if (result[0] == 1) {
+      res.status(204).send();
+    } else {
+      res.status(400).send({
+        message: `Cannot suspend student with email: ${studentEmail}.`,
       });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: `Internal Server Error when trying to suspend student: ${studentEmail}`,
     });
-  return null;
+  }
 };
 
-exports.unsuspendStudent = (req, res) => {
+exports.unsuspendStudent = async (req, res) => {
   if (req.body == null || req.body.student == null) {
     res
       .status(400)
@@ -81,33 +94,33 @@ exports.unsuspendStudent = (req, res) => {
 
   const studentEmail = req.body.student;
 
-  Student.update({ isSuspended: false }, { where: { email: studentEmail } })
-    .then((data) => {
-      if (data[0] == 1) {
-        console.log(data);
-        res.status(204).send();
-      } else {
-        res.status(500).send({
-          message: `Cannot unsuspend student with email: ${studentEmail}`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Internal Server Error when trying to unsuspend student.",
+  try {
+    const result = await studentService.suspendStudent(studentEmail, false);
+    console.log(result);
+    if (result[0] == 1) {
+      res.status(204).send();
+    } else {
+      res.status(400).send({
+        message: `Cannot unsuspend student with email: ${studentEmail}.`,
       });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message ||
+        `Internal Server Error when trying to unsuspend student: ${studentEmail}`,
     });
-  return null;
+  }
 };
 
 exports.retrieveForNotifications = async (req, res) => {
   if (req.body == null) {
-    res.send(404).send({ message: "Invalid Request." });
+    res.send(400).send({ message: "Invalid Request." });
   }
 
   const teacherEmail = req.body.teacher;
   const splitStudents = req.body.notification.split("@");
-  const notificationMessage = splitStudents.shift();
+  const notificationMessage = splitStudents.shift(); // not in use
   const taggedStudents = [];
 
   for (let index = 0; index < splitStudents.length; index += 2) {
@@ -117,28 +130,21 @@ exports.retrieveForNotifications = async (req, res) => {
     taggedStudents.push(element);
   }
   console.log(taggedStudents);
-
-  const result = await Student_Teacher.findAll({
-    attributes: [],
-    include: {
-      model: Student,
-      required: true,
-      where: { isSuspended: false },
-      attributes: ["email"],
-    },
-    where: {
-      [Op.or]: [
-        { teacherEmail: teacherEmail },
-        { studentEmail: taggedStudents },
-      ],
-    },
-    raw: true,
-  });
-  console.log(result.map((element) => element["student.email"]));
-
-  const response = new NotificationResponse.NotificationResponse(
-    result.map((element) => element["student.email"])
-  );
-
-  res.status(200).send(response);
+  try {
+    const result = await teacherService.findAllRecipients(
+      teacherEmail,
+      taggedStudents
+    );
+    const recipientsList = result.map((element) => element["student.email"]);
+    recipientsList.length === 0
+      ? res
+          .status(404)
+          .send({ message: "Could not find any students to notify." })
+      : res.status(200).send(NotificationResponse(recipientsList));
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message || `Internal Server Error when trying to get recipents`,
+    });
+  }
 };

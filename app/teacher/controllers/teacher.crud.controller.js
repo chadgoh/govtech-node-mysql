@@ -1,6 +1,6 @@
 const database = require("../../database");
 const Teacher = database.teachers;
-
+const teacherService = require("../repositories/teacher.repository.js");
 exports.createTeacher = (req, res) => {
   if (!req.body.email || !req.body.email.includes("@")) {
     res.status(400).send({
@@ -28,7 +28,7 @@ exports.findAll = (req, res) => {
   console.log("Finding all teachers");
   Teacher.findAll()
     .then((data) => {
-      res.send(data);
+      res.status(200).send(data.map((teacher) => teacher["email"]));
     })
     .catch((err) => {
       console.log(err);
@@ -36,78 +36,51 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.findTeacherById = (req, res) => {
+exports.findTeacherByEmail = async (req, res) => {
   if (req === null || req.body === null) {
     res.status(400).send({
       message: "Invalid Request.",
     });
   }
-  const id = req.body.id;
-  Teacher.findByPk(id)
-    .then((data) => {
-      if (data) {
-        res.send(data);
-      } else {
-        res
-          .status(404)
-          .send({ message: "Cannot find any teacher with the given email." });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          "Internal Server Error when trying to find teacher with the given email.",
-      });
-    });
-};
+  const email = req.body.email;
 
-exports.updateTeacher = (req, res) => {
-  const { id, email } = req.body;
-
-  Teacher.update(
-    { email: email },
-    {
-      where: { staffId: id },
+  try {
+    const result = await teacherService.findTeacherByEmail(email);
+    console.log(result);
+    if (result) {
+      res.send(result);
+    } else {
+      res
+        .status(404)
+        .send({ message: "Cannot find any teacher with the given email." });
     }
-  )
-    .then((data) => {
-      console.log(data);
-      if (data[0] === 1) {
-        res.status(200).send({
-          message: "Teacher successfully updated.",
-        });
-      } else {
-        res.send({
-          message: `Cannot update Teacher with id=${id}`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error updating teacher.",
-      });
+  } catch (error) {
+    res.status(500).send({
+      message:
+        "Internal Server Error when trying to find teacher with the given email.",
     });
+  }
 };
 
 exports.delete = (req, res) => {
-  const id = req.params.id;
+  const email = req.body.email;
   Teacher.destroy({
-    where: { id: id },
+    where: { email: email },
   })
     .then((data) => {
-      if (data[0] === 1) {
+      if (data == 1) {
         res.status(200).send({
           message: "Teacher successfully deleted.",
         });
       } else {
-        res.send({
-          message: `Cannot delete Teacher with id=${id}`,
+        res.status(400).send({
+          message: `Cannot delete Teacher with email=${email}`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: `Cannot delete Teacher with id=${id}`,
+        message: `Cannot delete Teacher with email=${email}`,
       });
     });
 };

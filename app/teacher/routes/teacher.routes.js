@@ -5,8 +5,8 @@ module.exports = (app) => {
 
   router.post("/teachers/create", teacherCrud.createTeacher);
   router.get("/teachers/", teacherCrud.findAll);
-  router.post("/teachers/findTeacherById", teacherCrud.findTeacherById);
-  router.put("/teachers/updateTeacher", teacherCrud.updateTeacher);
+  router.post("/teachers/findTeacherByEmail", teacherCrud.findTeacherByEmail);
+  router.post("/teacher/delete", teacherCrud.delete);
 
   router.post("/register", teacherAdmin.registerStudent); // return 204 on success
   router.get("/commonstudents", teacherAdmin.commonStudents); // 200 on success
