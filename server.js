@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const database = require("./app/models");
+const database = require("./app/database");
 const morgan = require("morgan");
 
 var corsConfig = {
@@ -32,7 +32,7 @@ database.sequelize
     console.log("Failed to sync the database: " + err.message);
   });
 
-require("./app/routes/teacher.routes")(app);
+require("./app/teacher/routes/teacher.routes.js")(app);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);

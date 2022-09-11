@@ -1,6 +1,6 @@
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
-const applyExtraSetup = require("./extra-setup");
+const applyExtraSetup = require("./extra-setup.js");
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -19,8 +19,14 @@ const database = {};
 database.Sequelize = Sequelize;
 database.sequelize = sequelize;
 
-database.teachers = require("./teacher.model.js")(sequelize, Sequelize);
-database.students = require("./student.model.js")(sequelize, Sequelize);
+database.teachers = require("../teacher/teacher.model.js")(
+  sequelize,
+  Sequelize
+);
+database.students = require("../student/student.model.js")(
+  sequelize,
+  Sequelize
+);
 database.student_teacher = require("./extra-setup.js")(sequelize, Sequelize);
 
 applyExtraSetup(sequelize, Sequelize);
