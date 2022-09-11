@@ -7,21 +7,27 @@ const morgan = require("morgan");
 var corsConfig = {
   origin: "http://localhost:3000",
 };
-
 app.use(cors(corsConfig));
+const jsonOnlyURIs = [
+  "/api/register",
+  "/api/suspend",
+  "/api/retrievefornotifications",
+];
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(function (req, res, next) {
+  if (jsonOnlyURIs.includes(req.url)) {
+    if (req.headers["content-type"] != "application/json") {
+      res.status(415).send({
+        message: "Unsupported media type. Only application/json allowed",
+      });
+    }
+  }
+  next();
+});
+
 app.use(morgan("tiny"));
-
-app.get("/", (req, res) => {
-  res.json({ message: "hello world" });
-});
-
-app.post("/testpost", (req, res) => {
-  console.log(req);
-  res.json(req.body);
-});
 
 database.sequelize
   .sync({ force: false })

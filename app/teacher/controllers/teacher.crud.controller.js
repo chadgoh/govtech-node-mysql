@@ -57,6 +57,7 @@ exports.findTeacherByEmail = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
+        error.message ||
         "Internal Server Error when trying to find teacher with the given email.",
     });
   }

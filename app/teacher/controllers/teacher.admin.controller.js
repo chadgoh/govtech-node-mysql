@@ -4,6 +4,7 @@ const teacherService = require("../repositories/teacher.repository.js");
 const studentService = require("../../student/repositories/student.repository.js");
 
 exports.registerStudent = (req, res) => {
+  console.log(req.headers["content-type"]);
   if (
     req.body == null ||
     req.body.teacher == null ||
@@ -14,23 +15,22 @@ exports.registerStudent = (req, res) => {
 
   const { teacher: teacherEmail, students: studentEmails } = req.body;
 
-  studentEmails.forEach((email) => {
+  studentEmails.forEach(async (email) => {
     studentService.findOrCreateStudent(email);
   });
 
   teacherService
     .findTeacherByEmail(teacherEmail)
     .then((foundTeacher) => {
-      console.log("<<", foundTeacher);
-      if (!foundTeacher) {
-        res
-          .status(404)
-          .send(
-            `Sorry, we cannot find a teacher with the given email: ${teacherEmail}`
-          );
+      console.log(foundTeacher);
+      if (foundTeacher) {
+        teacherService.registerStudentsToTeacher(foundTeacher, studentEmails);
+        res.status(204).send();
+      } else {
+        res.status(404).send({
+          message: `Unable tp find a teacher with the given email: ${teacherEmail}`,
+        });
       }
-      teacherService.registerStudentsToTeacher(foundTeacher, studentEmails);
-      res.status(204).send();
     })
     .catch((error) => {
       res.status(500).send({
