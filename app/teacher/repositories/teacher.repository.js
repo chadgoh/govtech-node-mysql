@@ -50,16 +50,6 @@ module.exports.findAllCommonStudents = async (teachers) => {
   );
 
   return results;
-  // return await Student_Teacher.findAll({
-  //   attributes: ["studentEmail"],
-  //   where: {
-  //     teacherEmail: {
-  //       [Op.in]: teachers,
-  //     },
-  //   },
-  //   raw: true,
-  //   group: "teacherEmail",
-  // });
 };
 
 module.exports.findAllRecipients = async (teacherEmail, taggedStudents) => {

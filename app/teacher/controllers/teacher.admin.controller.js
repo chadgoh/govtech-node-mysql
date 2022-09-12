@@ -1,7 +1,7 @@
 const NotificationResponse = require("../responsemodels/notification.response.js");
 const CommonStudentResponse = require("../responsemodels/commonstudents.response.js");
-const teacherService = require("../repositories/teacher.repository.js");
-const studentService = require("../../student/repositories/student.repository.js");
+const teacherRepository = require("../repositories/teacher.repository.js");
+const studentRepository = require("../../student/repositories/student.repository.js");
 
 exports.registerStudent = async (req, res) => {
   if (
@@ -14,7 +14,7 @@ exports.registerStudent = async (req, res) => {
 
   const { teacher: teacherEmail, students: studentEmails } = req.body;
   try {
-    const result = await teacherService.registerStudentsToTeacher(
+    const result = await teacherRepository.registerStudentsToTeacher(
       teacherEmail,
       studentEmails
     );
@@ -43,7 +43,7 @@ exports.commonStudents = async (req, res) => {
   }
 
   try {
-    const students = await teacherService.findAllCommonStudents(teachers);
+    const students = await teacherRepository.findAllCommonStudents(teachers);
 
     res
       .status(200)
@@ -68,7 +68,7 @@ exports.suspendStudent = async (req, res) => {
   const studentEmail = req.body.student;
 
   try {
-    const result = await studentService.suspendStudent(studentEmail, true);
+    const result = await studentRepository.suspendStudent(studentEmail, true);
 
     if (result[0] == 1) {
       res.status(204).send();
@@ -94,7 +94,7 @@ exports.unsuspendStudent = async (req, res) => {
   const studentEmail = req.body.student;
 
   try {
-    const result = await studentService.suspendStudent(studentEmail, false);
+    const result = await studentRepository.suspendStudent(studentEmail, false);
     console.log(result);
     if (result[0] == 1) {
       res.status(204).send();
@@ -134,7 +134,7 @@ exports.retrieveForNotifications = async (req, res) => {
         taggedStudents.push(element);
       }
 
-      const result = await teacherService.findAllRecipients(
+      const result = await teacherRepository.findAllRecipients(
         teacherEmail,
         taggedStudents
       );
