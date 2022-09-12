@@ -3,6 +3,8 @@ const cors = require("cors");
 const app = express();
 const database = require("./app/database");
 const morgan = require("morgan");
+const dotenv = require("dotenv");
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 var corsConfig = {
   origin: "http://localhost:3000",
@@ -15,7 +17,7 @@ const jsonOnlyURIs = [
 ];
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
   if (jsonOnlyURIs.includes(req.url)) {
     if (req.headers["content-type"] != "application/json") {
@@ -30,8 +32,9 @@ app.use(function (req, res, next) {
 app.use(morgan("tiny"));
 
 database.sequelize
-  .sync({ force: false })
+  .sync({ force: process.env.DROP_CREATE })
   .then(() => {
+    console.log("Connected to:", database.sequelize.config.database);
     console.log("Synced DB");
   })
   .catch((err) => {

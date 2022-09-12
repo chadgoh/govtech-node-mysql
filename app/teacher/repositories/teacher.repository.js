@@ -8,8 +8,8 @@ module.exports.create = async (teacher) => {
   return await Teacher.create({ email: teacher });
 };
 
-module.exports.findTeacherByEmail = async (email) => {
-  const result = await Teacher.findOne({
+module.exports.findTeacherByEmail = (email) => {
+  const result = Teacher.findOne({
     where: { email: email },
   });
   console.log(result);
@@ -18,14 +18,9 @@ module.exports.findTeacherByEmail = async (email) => {
 
 module.exports.registerStudentsToTeacher = async (teacher, students) => {
   const foundTeacher = await this.findTeacherByEmail(teacher);
-
   if (foundTeacher != null) {
-    students.map((student) =>
-      Student.findOrCreate({ where: { email: student } })
-    );
     return await foundTeacher.addStudents(students);
   }
-  return null;
 };
 
 module.exports.findAllCommonStudents = async (teachers) => {

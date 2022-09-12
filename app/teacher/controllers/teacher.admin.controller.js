@@ -18,20 +18,26 @@ exports.registerStudent = async (req, res) => {
       teacherEmail,
       studentEmails
     );
-
     if (result == null) {
-      res
-        .status(400)
-        .send({ message: "Invalid Request. Make sure teacher exists." });
+      res.status(400).send({
+        message:
+          "Invalid Request. Ensure that the teacher has been created before registering students and/or provided students have not yet been registered to the specified teacher.",
+      });
     } else {
       res.status(204).send();
     }
   } catch (error) {
-    res.status(500).send({
-      message:
-        error.message ||
-        "Internal server error occured when trying to register students.",
-    });
+    if (error.name == "SequelizeForeignKeyConstraintError") {
+      res.status(400).send({
+        message: "Bad Request. Ensure students are created before registering.",
+      });
+    } else {
+      res.status(500).send({
+        message:
+          error.message ||
+          "Internal server error occured when trying to register students.",
+      });
+    }
   }
 };
 
