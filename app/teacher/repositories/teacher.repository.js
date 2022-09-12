@@ -4,22 +4,16 @@ const Student = database.students;
 const Student_Teacher = database.student_teacher;
 const { Op } = require("sequelize");
 
+module.exports.create = async (teacher) => {
+  return await Teacher.create({ email: teacher });
+};
+
 module.exports.findTeacherByEmail = async (email) => {
   const result = await Teacher.findOne({
     where: { email: email },
   });
   console.log(result);
   return result;
-};
-
-const bulkCreateStudents = async (students) => {
-  await Student.bulkCreate(
-    students.map((student) => {
-      return {
-        email: student,
-      };
-    })
-  );
 };
 
 module.exports.registerStudentsToTeacher = async (teacher, students) => {

@@ -4,7 +4,6 @@ const teacherService = require("../repositories/teacher.repository.js");
 const studentService = require("../../student/repositories/student.repository.js");
 
 exports.registerStudent = async (req, res) => {
-  console.log(req.headers["content-type"]);
   if (
     req.body == null ||
     req.body.teacher == null ||
@@ -38,10 +37,14 @@ exports.registerStudent = async (req, res) => {
 
 exports.commonStudents = async (req, res) => {
   const teachers = req.query.teacher;
-  console.log(teachers);
+
+  if (teachers == null || teachers == undefined) {
+    res.status(400).send({ message: "No input detected." });
+  }
+
   try {
     const students = await teacherService.findAllCommonStudents(teachers);
-    console.log(students);
+
     res
       .status(200)
       .send(
@@ -66,7 +69,7 @@ exports.suspendStudent = async (req, res) => {
 
   try {
     const result = await studentService.suspendStudent(studentEmail, true);
-    console.log(result);
+
     if (result[0] == 1) {
       res.status(204).send();
     } else {
@@ -110,37 +113,42 @@ exports.unsuspendStudent = async (req, res) => {
 };
 
 exports.retrieveForNotifications = async (req, res) => {
-  if (req.body == null) {
-    res.send(400).send({ message: "Invalid Request." });
-  }
+  let teacherEmail, splitStudents, notificationMessage;
+  if (
+    req.body == null ||
+    req.body.teacher == null ||
+    req.body.notification == null
+  ) {
+    res.status(400).send({ message: "Invalid Request." });
+  } else {
+    teacherEmail = req.body.teacher;
+    splitStudents = req.body.notification.split("@");
+    notificationMessage = splitStudents.shift();
 
-  const teacherEmail = req.body.teacher;
-  const splitStudents = req.body.notification.split("@");
-  const notificationMessage = splitStudents.shift(); // not in use
-  const taggedStudents = [];
+    const taggedStudents = [];
+    try {
+      for (let index = 0; index < splitStudents.length; index += 2) {
+        const element = splitStudents[index]
+          .concat("@" + splitStudents[index + 1])
+          .trim();
+        taggedStudents.push(element);
+      }
 
-  for (let index = 0; index < splitStudents.length; index += 2) {
-    const element = splitStudents[index]
-      .concat("@" + splitStudents[index + 1])
-      .trim();
-    taggedStudents.push(element);
-  }
-  console.log(taggedStudents);
-  try {
-    const result = await teacherService.findAllRecipients(
-      teacherEmail,
-      taggedStudents
-    );
-    const recipientsList = result.map((element) => element["student.email"]);
-    recipientsList.length === 0
-      ? res
-          .status(404)
-          .send({ message: "Could not find any students to notify." })
-      : res.status(200).send(NotificationResponse(recipientsList));
-  } catch (error) {
-    res.status(500).send({
-      message:
-        error.message || `Internal Server Error when trying to get recipents`,
-    });
+      const result = await teacherService.findAllRecipients(
+        teacherEmail,
+        taggedStudents
+      );
+      const recipientsList = result.map((element) => element["student.email"]);
+      recipientsList.length === 0
+        ? res
+            .status(404)
+            .send({ message: "Could not find any students to notify." })
+        : res.status(200).send(NotificationResponse(recipientsList));
+    } catch (error) {
+      res.status(500).send({
+        message:
+          error.message || `Internal Server Error when trying to get recipents`,
+      });
+    }
   }
 };
