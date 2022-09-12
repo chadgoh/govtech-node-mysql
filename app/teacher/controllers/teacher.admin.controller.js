@@ -3,7 +3,7 @@ const CommonStudentResponse = require("../responsemodels/commonstudents.response
 const teacherService = require("../repositories/teacher.repository.js");
 const studentService = require("../../student/repositories/student.repository.js");
 
-exports.registerStudent = (req, res) => {
+exports.registerStudent = async (req, res) => {
   console.log(req.headers["content-type"]);
   if (
     req.body == null ||
@@ -14,35 +14,31 @@ exports.registerStudent = (req, res) => {
   }
 
   const { teacher: teacherEmail, students: studentEmails } = req.body;
+  try {
+    const result = await teacherService.registerStudentsToTeacher(
+      teacherEmail,
+      studentEmails
+    );
 
-  studentEmails.forEach(async (email) => {
-    studentService.findOrCreateStudent(email);
-  });
-
-  teacherService
-    .findTeacherByEmail(teacherEmail)
-    .then((foundTeacher) => {
-      console.log(foundTeacher);
-      if (foundTeacher) {
-        teacherService.registerStudentsToTeacher(foundTeacher, studentEmails);
-        res.status(204).send();
-      } else {
-        res.status(404).send({
-          message: `Unable tp find a teacher with the given email: ${teacherEmail}`,
-        });
-      }
-    })
-    .catch((error) => {
-      res.status(500).send({
-        message:
-          error.message || "Internal Server Error when registering students.",
-      });
+    if (result == null) {
+      res
+        .status(400)
+        .send({ message: "Invalid Request. Make sure teacher exists." });
+    } else {
+      res.status(204).send();
+    }
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message ||
+        "Internal server error occured when trying to register students.",
     });
+  }
 };
 
 exports.commonStudents = async (req, res) => {
   const teachers = req.query.teacher;
-
+  console.log(teachers);
   try {
     const students = await teacherService.findAllCommonStudents(teachers);
     console.log(students);

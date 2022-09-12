@@ -12,21 +12,60 @@ module.exports.findTeacherByEmail = async (email) => {
   return result;
 };
 
+const bulkCreateStudents = async (students) => {
+  await Student.bulkCreate(
+    students.map((student) => {
+      return {
+        email: student,
+      };
+    })
+  );
+};
+
 module.exports.registerStudentsToTeacher = async (teacher, students) => {
-  return await teacher.addStudents(students);
+  const foundTeacher = await this.findTeacherByEmail(teacher);
+
+  if (foundTeacher != null) {
+    students.map((student) =>
+      Student.findOrCreate({ where: { email: student } })
+    );
+    return await foundTeacher.addStudents(students);
+  }
+  return null;
 };
 
 module.exports.findAllCommonStudents = async (teachers) => {
-  return await Student_Teacher.findAll({
-    attributes: ["studentEmail"],
-    where: {
-      teacherEmail: {
-        [Op.or]: teachers,
+  let teacherCount = 0;
+  console.log(typeof teachers == "string");
+  if (typeof teachers === "string") {
+    teacherCount = 1;
+  } else {
+    teacherCount = teachers.length;
+  }
+  const [results, metadata] = await database.sequelize.query(
+    "SELECT `studentEmail`, COUNT('studentEmail') AS teacherCount" +
+      " FROM `student_teachers` " +
+      "WHERE `student_teachers`.`teacherEmail` IN(:teachers)" +
+      "GROUP BY `studentEmail` HAVING teacherCount = :teacherCount;",
+    {
+      replacements: {
+        teachers: typeof teachers !== "string" ? [...teachers] : teachers,
+        teacherCount: teacherCount,
       },
-    },
-    raw: true,
-    group: "studentEmail",
-  });
+    }
+  );
+
+  return results;
+  // return await Student_Teacher.findAll({
+  //   attributes: ["studentEmail"],
+  //   where: {
+  //     teacherEmail: {
+  //       [Op.in]: teachers,
+  //     },
+  //   },
+  //   raw: true,
+  //   group: "teacherEmail",
+  // });
 };
 
 module.exports.findAllRecipients = async (teacherEmail, taggedStudents) => {
