@@ -4,6 +4,15 @@
 
 Teachers need a system where they can perform administrative functions for their students. Teachers and students are identified by their email addresses.
 
+## Table Of Contents
+
+1. [Techstack](#techstack)
+2. [Deployment](#deployment)
+3. [Instructions for running locally](#local-setup)
+4. [Database Schema](#database-table-schema)
+5. [API Links](#api-links)
+6. [User stories with assumptions](#user-stories-with-added-assumptions)
+
 ---
 
 ## Techstack
@@ -20,21 +29,60 @@ Heroku and ClearDB
 
 URL: [App Base URL](https://govtech-node-mysql.herokuapp.com/)
 
-API Links can be found [here](#API-Links)
+API Links can be found [here](#api-Links)
 
 ---
 
-# Database Schema
+## Local Setup
 
-### Table: `Students`
+### Prerequisites:
+
+- Have mysql installed locally
+- Have node installed locally
+- Have git installed locally
+
+### 1. Set up database
+
+1. Login to mysql with `mysql -u <username> -p` on your terminal
+   - enter password when prompted
+2. create a database `create database my_db;`
+
+### 2. Clone repository
+
+1. run `git clone https://github.com/chadgoh/govtech-node-mysql.git` in to your directory of choice
+2. Create an .env.local file in project root
+
+   1. `cd dcube`
+   2. `touch .env.local`
+   3. paste the following fields and fill in mysql username and password
+
+   ```txt
+   HOST=localhost
+   DB_USER=<username>
+   DB_PASSWORD=<password>
+   DB_NAME=my_db
+   DROP_CREATE=true #
+   ```
+
+   > DROP_CREATE true means that, on start up, the database will automatically drop and create the tables if they already exist. Change to false if you want the data to persist.
+
+3. Install dependencies and run local script
+   1. In the project root folder, run `npm install`
+   2. Run `npm run local` to start up a local instance of the server and you're ready to go.
+
+---
+
+## Database Table Schema
+
+### `Students`
 
 ![studentTable.png](assets/studentTable.png)
 
-### Table: `Teachers`
+### `Teachers`
 
 ![teacherTable.png](assets/teacherTable.png)
 
-### Table: `Student_teachers`
+### `Student_teachers`
 
 ![studentTeachersTable.png](assets/studentTeachersTable.png)
 ![studentTeacherIndexes.png](assets/studentTeacherIndexes.png)
@@ -113,7 +161,7 @@ API Links can be found [here](#API-Links)
 
 ---
 
-# User Stories with added assumptions.
+## User Stories with added assumptions.
 
 ### 1. As a teacher, I want to register one or more students to a specified teacher.
 

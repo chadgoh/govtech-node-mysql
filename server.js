@@ -40,7 +40,9 @@ database.sequelize
   });
 
 app.get("/", function (req, res) {
-  res.send("View readme for more details.");
+  res.send(
+    "View readme for more details. https://github.com/chadgoh/govtech-node-mysql/blob/main/readme.md"
+  );
 });
 
 require("./app/teacher/routes/teacher.routes.js")(app);
