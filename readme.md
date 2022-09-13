@@ -88,7 +88,7 @@ API Links can be found [here](#api-Links)
 1. run `git clone https://github.com/chadgoh/govtech-node-mysql.git` in to your directory of choice
 2. Create an .env.local file in project root
 
-   1. `cd dcube`
+   1. `cd govtech-node-mysql`
    2. `touch .env.local`
    3. paste the following fields and fill in mysql username and password
 
