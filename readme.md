@@ -25,11 +25,45 @@ Teachers need a system where they can perform administrative functions for their
 
 ## Deployment
 
+### Platform:
+
 Heroku and ClearDB
 
-URL: [App Base URL](https://govtech-node-mysql.herokuapp.com/)
+Base URL: https://govtech-node-mysql.herokuapp.com/
 
 API Links can be found [here](#api-Links)
+
+### Currently there should be:
+
+2 teachers:
+
+1. teacherken@gmail.com
+
+   ```json {
+   "students": [
+       "commonstudentjon@gmail.com",
+       "commonstudenttom@gmail.com",
+       "second_student_only_under_teacherken@gmail.com",
+       "student_only_under_teacherken@gmail.com"
+   ]
+
+   ```
+
+2. teacherben@gmail.com
+   ```json {
+       " students": [
+           "commonstudentjon@gmail.com",
+           "commonstudenttom@gmail.com"
+       ]
+   ```
+
+5 students:
+
+1. commonstudenttom@gmail.com - `suspended false`
+2. second_student_only_under_teacherken@gmail.com - `suspended false`
+3. student_only_under_teacherken@gmail.com - `suspended false`
+4. unregisteredstudent_sam@gmail.com - `suspended false`
+5. commonstudentjon@gmail.com - `suspended false`
 
 > I've included a postman collection in the repo that can be used to set up the app. Make sure to set an environmnt variable for {{host}} before using it.
 
