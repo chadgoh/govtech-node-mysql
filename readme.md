@@ -20,9 +20,11 @@ Heroku and ClearDB
 
 URL: [App Base URL](https://govtech-node-mysql.herokuapp.com/)
 
+API Links can be found [here](## API-Links)
+
 ---
 
-## Database Schema
+# Database Schema
 
 ### Table: `Students`
 
@@ -40,14 +42,16 @@ URL: [App Base URL](https://govtech-node-mysql.herokuapp.com/)
 
 ---
 
-Core API Routes:
+## API Links
+
+### Core API:
 
 - `POST` https://govtech-node-mysql.herokuapp.com/api/register
 - `GET` https://govtech-node-mysql.herokuapp.com/api/commonstudents
 - `POST` https://govtech-node-mysql.herokuapp.com/api/suspend
 - `POST` https://govtech-node-mysql.herokuapp.com/api/retrievefornotifications
 
-Miscellaneous CRUD APIs:
+### Miscellaneous CRUD APIs:
 
 - `Teacher`
 
