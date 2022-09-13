@@ -90,14 +90,14 @@ API Links can be found [here](#api-Links)
 
    1. `cd govtech-node-mysql`
    2. `touch .env.local`
-   3. paste the following fields and fill in mysql username and password
+   3. paste the following fields into .env.local and fill in mysql username and password
 
    ```txt
    HOST=localhost
    DB_USER=<username>
    DB_PASSWORD=<password>
    DB_NAME=my_db
-   DROP_CREATE=true #
+   DROP_CREATE=true
    ```
 
    > DROP_CREATE true means that, on start up, the database will automatically drop and create the tables if they already exist. Change to false if you want the data to persist.
