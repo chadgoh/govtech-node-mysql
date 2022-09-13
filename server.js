@@ -3,6 +3,8 @@ const cors = require("cors");
 const app = express();
 const database = require("./app/database");
 const morgan = require("morgan");
+const dotenv = require("dotenv");
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 var corsConfig = {
   origin: "http://localhost:3000",

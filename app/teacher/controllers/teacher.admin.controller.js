@@ -101,7 +101,7 @@ exports.unsuspendStudent = async (req, res) => {
 
   try {
     const result = await studentRepository.suspendStudent(studentEmail, false);
-    console.log(result);
+
     if (result[0] == 1) {
       res.status(204).send();
     } else {
