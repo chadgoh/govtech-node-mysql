@@ -20,7 +20,7 @@ Heroku and ClearDB
 
 URL: [App Base URL](https://govtech-node-mysql.herokuapp.com/)
 
-API Links can be found [here](## API-Links)
+API Links can be found [here](#API-Links)
 
 ---
 
