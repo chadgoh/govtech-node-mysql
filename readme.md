@@ -104,7 +104,7 @@ API Links can be found [here](#api-Links)
 
 3. Install dependencies and run local script
    1. In the project root folder, run `npm install`
-   2. Run `npm run local` to start up a local instance of the server and you're ready to go.
+   2. Run `npm run local` to start up a local instance of the server at port 8080.
 
 ---
 
