@@ -80,7 +80,7 @@ exports.suspendStudent = async (req, res) => {
       res.status(204).send();
     } else {
       res.status(400).send({
-        message: `Cannot suspend student with email: ${studentEmail}.`,
+        message: `Cannot suspend student with email: ${studentEmail}. Check that student exists, or is not already suspended.`,
       });
     }
   } catch (error) {
@@ -106,7 +106,7 @@ exports.unsuspendStudent = async (req, res) => {
       res.status(204).send();
     } else {
       res.status(400).send({
-        message: `Cannot unsuspend student with email: ${studentEmail}.`,
+        message: `Cannot unsuspend student with email: ${studentEmail}. Check that student exists, or is not currently suspended.`,
       });
     }
   } catch (error) {
