@@ -37,9 +37,9 @@ API Links can be found [here](#api-Links)
 
 ### Prerequisites:
 
-- Have mysql installed locally
-- Have node installed locally
-- Have git installed locally
+- Have mysql installed locally. Follow the [getting started guide](https://dev.mysql.com/doc/mysql-getting-started/en/) if not yet set up.
+- Have [node](https://nodejs.org/en/) installed locally
+- Have [git](https://github.com/git-guides/install-git) installed locally
 
 ### 1. Set up database
 
