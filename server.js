@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
 app.use(morgan("tiny"));
 
 database.sequelize
-  .sync({ force: process.env.DROP_CREATE })
+  .sync({ force: process.env.DROP_CREATE || false })
   .then(() => {
     console.log("Connected to:", database.sequelize.config.database);
     console.log("Synced DB");

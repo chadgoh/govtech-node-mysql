@@ -31,6 +31,8 @@ URL: [App Base URL](https://govtech-node-mysql.herokuapp.com/)
 
 API Links can be found [here](#api-Links)
 
+> I've included a postman collection in the repo that can be used to set up the app. Make sure to set an environmnt variable for {{host}} before using it.
+
 ---
 
 ## Local Setup
@@ -261,6 +263,8 @@ The list of students retrieved should not contain any duplicates/repetitions.
 
 - Endpoint: `POST https://govtech-node-mysql.herokuapp.com/api/retrievefornotifications`
 - Headers: `Content-Type: application/json`
+- Assumptions:
+  - A student not registered to any teacher will not receive notifications.
 - Success response status: HTTP 200
 - Request body example 1:
 

@@ -1,0 +1,384 @@
+{
+	"info": {
+		"_postman_id": "804e07ef-2b7f-42c7-bce0-58f69c6e3ece",
+		"name": "GovTech",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8700877"
+	},
+	"item": [
+		{
+			"name": "Teacher CRUD",
+			"item": [
+				{
+					"name": "create teacher",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"email\":\"teacherben@gmail.com\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/teachers/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"teachers",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindTeacherByEmail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"teacherben@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/teachers/findTeacherByEmail",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"teachers",
+								"findTeacherByEmail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindAll Teachers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"hello@world.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/teachers/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"teachers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateTeacher",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"1\",\n    \"email\": \"ne2w@world.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/teachers/updateTeacher",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"teachers",
+								"updateTeacher"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteTeacher",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"teacherven@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/teacher/delete",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"teacher",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin endpoints",
+			"item": [
+				{
+					"name": "registerStudents",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"teacher\": \"teacherken@gmail.com\",\n  \"students\":\n    [\n    \"second_student_only_under_teacherken@gmail.com\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "commonStudents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/commonstudents?teacher=teacherken%40gmail.com&teacher=teacherben%40gmail.com",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"commonstudents"
+							],
+							"query": [
+								{
+									"key": "teacher",
+									"value": "teacherken%40gmail.com"
+								},
+								{
+									"key": "teacher",
+									"value": "teacherben%40gmail.com"
+								},
+								{
+									"key": "teacher",
+									"value": "teacherpen@gmail.com",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unsuspendStudent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student\": \"commonstudentjon@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/unsuspend",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"unsuspend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suspendStudent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student\": \"commonstudenthon@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/suspend",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"suspend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retrievefornotifications",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"teacher\":  \"teacherken@gmail.com\",\n  \"notification\": \"Hello students! @student_only_under_teacherken@gmail.com @second_student_only_under_teacherken@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/retrievefornotifications",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"retrievefornotifications"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student CRUD",
+			"item": [
+				{
+					"name": "create student",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"second_student_only_under_teacherken@gmail.com\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students/create",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteStudent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"student_only_under_teacherken@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students/delete",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll studends",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students/findAll",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
