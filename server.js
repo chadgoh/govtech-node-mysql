@@ -7,6 +7,7 @@ const morgan = require("morgan");
 var corsConfig = {
   origin: "http://localhost:3000",
 };
+
 app.use(cors(corsConfig));
 const jsonOnlyURIs = [
   "/api/register",
@@ -26,7 +27,6 @@ app.use(function (req, res, next) {
   }
   next();
 });
-
 app.use(morgan("tiny"));
 
 database.sequelize
@@ -38,6 +38,10 @@ database.sequelize
   .catch((err) => {
     console.log("Failed to sync the database: " + err.message);
   });
+
+app.get("/", function (req, res) {
+  res.send("View readme for more details.");
+});
 
 require("./app/teacher/routes/teacher.routes.js")(app);
 require("./app/student/routes/student.routes.js")(app);
