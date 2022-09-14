@@ -20,7 +20,7 @@ Teachers need a system where they can perform administrative functions for their
 1. NodeJS with express
 2. MySQL Database
 3. Sequelize ORM
-4. Chai, Sinon for unit testing
+4. Chai, Sinon, Mocha for unit testing (`npm run test` to trigger)
 5. Morgan for basic HTTP logging
 
 ## Deployment
