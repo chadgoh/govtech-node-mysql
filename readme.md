@@ -88,23 +88,23 @@ API Links can be found [here](#api-Links)
 1. run `git clone https://github.com/chadgoh/govtech-node-mysql.git` in to your directory of choice
 2. Create an .env.local file in project root
 
-   1. `cd dcube`
+   1. `cd govtech-node-mysql`
    2. `touch .env.local`
-   3. paste the following fields and fill in mysql username and password
+   3. paste the following fields into .env.local and fill in mysql username and password
 
    ```txt
    HOST=localhost
    DB_USER=<username>
    DB_PASSWORD=<password>
    DB_NAME=my_db
-   DROP_CREATE=true #
+   DROP_CREATE=true
    ```
 
    > DROP_CREATE true means that, on start up, the database will automatically drop and create the tables if they already exist. Change to false if you want the data to persist.
 
 3. Install dependencies and run local script
    1. In the project root folder, run `npm install`
-   2. Run `npm run local` to start up a local instance of the server and you're ready to go.
+   2. Run `npm run local` to start up a local instance of the server at port 8080.
 
 ---
 
